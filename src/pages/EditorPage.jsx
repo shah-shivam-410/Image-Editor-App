@@ -10,8 +10,10 @@ import ResizeControls from '../components/ResizeControls.jsx';
 import { RESIZE_PRESETS } from '../constants/presets.js';
 import { useImageProcessor } from '../hooks/useImageProcessor.js';
 import { useImageUpload } from '../hooks/useImageUpload.js';
+import { DEFAULT_DPI, presetToCm } from '../utils/dimensions.js';
 
 const defaultPreset = RESIZE_PRESETS[0];
+const defaultCm = presetToCm(defaultPreset, DEFAULT_DPI);
 
 export default function EditorPage() {
   const upload = useImageUpload();
@@ -20,6 +22,10 @@ export default function EditorPage() {
     preset: defaultPreset.id,
     width: defaultPreset.width,
     height: defaultPreset.height,
+    widthCm: defaultCm.widthCm,
+    heightCm: defaultCm.heightCm,
+    dimensionMode: 'px',
+    dpi: DEFAULT_DPI,
     targetKb: defaultPreset.targetKb,
     outputType: defaultPreset.outputType,
     maintainAspectRatio: false,
