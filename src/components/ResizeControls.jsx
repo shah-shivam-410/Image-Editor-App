@@ -1,6 +1,6 @@
 import { Calculator, Link, Lock, Ruler, Unlock } from 'lucide-react';
 import { RESIZE_PRESETS } from '../constants/presets.js';
-import { cmToPixels, formatCm, pixelsToCm, presetToCm } from '../utils/dimensions.js';
+import { DEFAULT_DPI, cmToPixels, formatCm, pixelsToCm, presetToCm } from '../utils/dimensions.js';
 
 export default function ResizeControls({
   settings,
@@ -9,15 +9,18 @@ export default function ResizeControls({
   disabled,
 }) {
   const isCmMode = settings.dimensionMode === 'cm';
-  const widthCmDisplay = formatCm(pixelsToCm(settings.width, settings.dpi));
-  const heightCmDisplay = formatCm(pixelsToCm(settings.height, settings.dpi));
+  const dpiNumber = Number(settings.dpi);
+  const hasValidDpi = Number.isFinite(dpiNumber) && dpiNumber > 0;
+  const displayDpi = hasValidDpi ? dpiNumber : DEFAULT_DPI;
+  const widthCmDisplay = formatCm(pixelsToCm(settings.width, displayDpi));
+  const heightCmDisplay = formatCm(pixelsToCm(settings.height, displayDpi));
 
   function updateDimensionMode(mode) {
     setSettings((current) => ({
       ...current,
       dimensionMode: mode,
-      widthCm: formatCm(pixelsToCm(current.width, current.dpi)),
-      heightCm: formatCm(pixelsToCm(current.height, current.dpi)),
+      widthCm: formatCm(pixelsToCm(current.width, Number(current.dpi) || DEFAULT_DPI)),
+      heightCm: formatCm(pixelsToCm(current.height, Number(current.dpi) || DEFAULT_DPI)),
     }));
   }
 
@@ -29,9 +32,14 @@ export default function ResizeControls({
           ...current,
           preset: 'custom',
           [field]: nextValue,
-          widthCm: field === 'width' ? formatCm(pixelsToCm(nextValue, current.dpi)) : current.widthCm,
+          widthCm:
+            field === 'width'
+              ? formatCm(pixelsToCm(nextValue, Number(current.dpi) || DEFAULT_DPI))
+              : current.widthCm,
           heightCm:
-            field === 'height' ? formatCm(pixelsToCm(nextValue, current.dpi)) : current.heightCm,
+            field === 'height'
+              ? formatCm(pixelsToCm(nextValue, Number(current.dpi) || DEFAULT_DPI))
+              : current.heightCm,
         };
       }
 
@@ -45,8 +53,8 @@ export default function ResizeControls({
         ...current,
         preset: 'custom',
         ...nextPixels,
-        widthCm: formatCm(pixelsToCm(nextPixels.width, current.dpi)),
-        heightCm: formatCm(pixelsToCm(nextPixels.height, current.dpi)),
+        widthCm: formatCm(pixelsToCm(nextPixels.width, Number(current.dpi) || DEFAULT_DPI)),
+        heightCm: formatCm(pixelsToCm(nextPixels.height, Number(current.dpi) || DEFAULT_DPI)),
       };
     });
   }
@@ -54,7 +62,7 @@ export default function ResizeControls({
   function updateCmDimension(field, value) {
     const nextCm = Math.max(0.01, Number(value) || 0.01);
     setSettings((current) => {
-      const nextPixels = cmToPixels(nextCm, current.dpi);
+      const nextPixels = cmToPixels(nextCm, Number(current.dpi) || DEFAULT_DPI);
       if (!current.maintainAspectRatio || !originalDimensions) {
         return {
           ...current,
@@ -83,17 +91,27 @@ export default function ResizeControls({
         widthCm:
           field === 'width'
             ? String(nextCm)
-            : formatCm(pixelsToCm(dimensions.width, current.dpi)),
+            : formatCm(pixelsToCm(dimensions.width, Number(current.dpi) || DEFAULT_DPI)),
         heightCm:
           field === 'height'
             ? String(nextCm)
-            : formatCm(pixelsToCm(dimensions.height, current.dpi)),
+            : formatCm(pixelsToCm(dimensions.height, Number(current.dpi) || DEFAULT_DPI)),
       };
     });
   }
 
   function updateDpi(value) {
-    const nextDpi = Math.max(1, Number(value) || 1);
+    if (value === '') {
+      setSettings((current) => ({ ...current, dpi: '' }));
+      return;
+    }
+
+    const nextDpi = Number(value);
+    if (!Number.isFinite(nextDpi) || nextDpi <= 0) {
+      setSettings((current) => ({ ...current, dpi: value }));
+      return;
+    }
+
     setSettings((current) => {
       if (current.dimensionMode !== 'cm') {
         return {
@@ -119,7 +137,7 @@ export default function ResizeControls({
       preset: preset.id,
       width: preset.width,
       height: preset.height,
-      ...presetToCm(preset, current.dpi),
+      ...presetToCm(preset, Number(current.dpi) || DEFAULT_DPI),
       targetKb: preset.targetKb,
       outputType: preset.outputType,
       maintainAspectRatio: preset.id === 'custom' ? current.maintainAspectRatio : false,
@@ -239,8 +257,13 @@ export default function ResizeControls({
           </span>
         </div>
         <p className="mt-2 text-slate-600">
-          {widthCmDisplay} cm x {heightCmDisplay} cm at {settings.dpi} DPI
+          {widthCmDisplay} cm x {heightCmDisplay} cm at {hasValidDpi ? settings.dpi : '--'} DPI
         </p>
+        {!hasValidDpi ? (
+          <p className="mt-1 text-xs font-semibold text-red-600">
+            Enter a DPI value before processing.
+          </p>
+        ) : null}
         <p className="mt-1 text-xs text-slate-500">
           Formula: centimeters / 2.54 x DPI = pixels
         </p>

@@ -29,6 +29,12 @@ export function useImageProcessor() {
         return null;
       }
 
+      const dpi = Number(options.dpi);
+      if (!Number.isFinite(dpi) || dpi <= 0) {
+        setError('Enter a valid DPI/PPI value before processing. Try 250 or 300.');
+        return null;
+      }
+
       setIsProcessing(true);
       setError('');
       setProgress(0);
@@ -42,7 +48,7 @@ export function useImageProcessor() {
 
         if (!processed.reachedTarget) {
           setError(
-            'The image is optimized, but the selected dimensions may be too large for that exact target size.',
+            'The image is optimized, but the selected dimensions may be too large for that exact target size. Try lowering DPI/PPI, for example 300 to 250 or 200, then process again.',
           );
         }
 

@@ -24,7 +24,7 @@ export default function EditorPage() {
     height: defaultPreset.height,
     widthCm: defaultCm.widthCm,
     heightCm: defaultCm.heightCm,
-    dimensionMode: 'px',
+    dimensionMode: 'cm',
     dpi: DEFAULT_DPI,
     targetKb: defaultPreset.targetKb,
     outputType: defaultPreset.outputType,
@@ -56,7 +56,7 @@ export default function EditorPage() {
                 <Sparkles size={20} aria-hidden="true" />
               </span>
               <div>
-                <h1 className="text-xl font-black text-ink sm:text-2xl">Passport Image Studio</h1>
+                <h1 className="text-xl font-black text-ink sm:text-2xl">Image-Resizer-App</h1>
                 <p className="mt-1 text-sm text-slate-600">Resize and compress photos or signatures locally.</p>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { Gauge } from 'lucide-react';
 
-const targetOptions = [20, 50, 100];
+const targetOptions = [15, 20, 50];
 
 export default function CompressionControls({ settings, setSettings, disabled }) {
   return (
@@ -55,15 +55,9 @@ export default function CompressionControls({ settings, setSettings, disabled })
 
       <label className="mt-5 block">
         <span className="text-sm font-semibold text-slate-700">Output format</span>
-        <select
-          disabled={disabled}
-          value={settings.outputType}
-          onChange={(event) => setSettings((current) => ({ ...current, outputType: event.target.value }))}
-          className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-ink outline-none focus:border-ink focus:ring-4 focus:ring-slate-200"
-        >
-          <option value="image/jpeg">JPG for photos</option>
-          <option value="image/png">PNG for signatures</option>
-        </select>
+        <div className="mt-2 flex h-11 items-center rounded-md border border-slate-300 bg-field px-3 text-sm font-bold text-ink">
+          JPG / JPEG for photo and signature
+        </div>
       </label>
     </section>
   );
