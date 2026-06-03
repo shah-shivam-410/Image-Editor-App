@@ -1,14 +1,14 @@
 # Image-Resizer-App
 
-Image-Resizer-App is a modern, frontend-only web application for resizing and compressing photos and signature images for online forms. It is designed for cases where portals require strict dimensions and file-size limits, such as `15 KB`, while still keeping the image clear and readable.
+Image-Resizer-App is a modern, frontend-only web application for resizing and compressing photos and signature images for online forms. It is designed for cases where portals require strict dimensions and file-size limits, such as `15 KB`, while still maintaining maximum possible clarity.
 
 The application runs entirely in the browser. Images are not uploaded to any server, and no backend is required.
 
 ## Live Demo
 
-This project is ready to host on GitHub Pages.
+This project is hosted on GitHub Pages.
 
-After deployment, the app will be available at:
+Use below URL to open the live application.
 
 ```text
 https://shah-shivam-410.github.io/Image-Resizer-App/
@@ -26,6 +26,21 @@ Image-Resizer-App solves this by allowing users to:
 - Preview the output before downloading
 - Keep processing private inside the browser
 
+## Important Usage Note
+
+This app is focused on resizing and compressing already-prepared images.
+
+Before uploading an image to this app, the user should manually crop and adjust the photo or signature using another tool if needed. For best results:
+
+- Crop the photo or signature to the required visible area first
+- Make sure the face/photo or signature is properly centered
+- Make sure the background and lighting are acceptable
+- For signatures, use a clear black or blue signature on white paper
+- Then upload the prepared image to this app
+- Use this app to set the required centimeter dimensions and target KB file size
+
+Crop, rotate, background cleanup, and image filters are not currently supported in this app.
+
 ## Common Use Cases
 
 - Government exam application forms
@@ -38,26 +53,6 @@ Image-Resizer-App solves this by allowing users to:
 - Recruitment and eligibility forms
 - Banking, insurance, and financial service forms
 - Any online portal that asks for a photo or signature under a fixed KB limit
-
-## Key Features
-
-- JPG, JPEG, and PNG upload support
-- Drag-and-drop image upload
-- Original image preview
-- Original dimensions and file size display
-- Centimeter and pixel input modes
-- DPI/PPI-based conversion
-- Passport Photo, Signature, and Custom presets
-- Target file size input in KB
-- Quick target-size buttons including `15 KB`
-- High-quality resizing using Pica
-- Binary-search JPEG compression for better clarity
-- Processed image preview
-- Final dimensions and final file size display
-- Download button for the optimized image
-- Mobile responsive interface
-- Error messages with practical suggestions, such as lowering DPI when the target size is too strict
-- Fully static and GitHub Pages compatible
 
 ## Default Presets
 
@@ -103,19 +98,6 @@ centimeters / 2.54 x DPI = pixels
 - browser-image-compression
 - lucide-react
 
-## Project Structure
-
-```text
-src/
-  components/      Reusable UI controls and preview panels
-  constants/       Presets and upload limits
-  hooks/           Upload and processing state hooks
-  pages/           Page-level app layout
-  services/        Image processing pipeline
-  styles/          Tailwind CSS entry file
-  utils/           File, validation, dimension, and metadata helpers
-```
-
 ## Local Setup
 
 Install dependencies:
@@ -152,16 +134,6 @@ base: './'
 
 That allows the built assets to work correctly from a GitHub Pages repository subpath.
 
-### Recommended Deployment Steps
-
-1. Push the project to a GitHub repository.
-2. Open the repository on GitHub.
-3. Go to **Settings**.
-4. Open **Pages**.
-5. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-6. Push to the `main` branch.
-7. GitHub Actions will build and deploy the app automatically.
-
 The included workflow is located at:
 
 ```text
@@ -181,6 +153,10 @@ The architecture is organized to support future features such as:
 - PDF generation
 - More exam and portal-specific presets
 
-## Created With Codex
+## Created With Codex by OpenAI
 
-This project was created with Codex as a coding assistant, with a focus on a clean frontend-only architecture, reusable React components, browser-based image processing, and GitHub Pages deployment.
+This project was created with the help of **Codex by OpenAI**.
+
+Codex assisted in designing and implementing the frontend-only architecture, reusable React components, browser-based image processing flow, Tailwind CSS interface, and GitHub Pages deployment setup.
+
+The goal of using Codex was to build a practical, user-friendly tool that can help people resize and compress photos or signatures for online forms without needing a backend server or external image upload service.

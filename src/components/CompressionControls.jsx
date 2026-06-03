@@ -1,7 +1,5 @@
 import { Gauge } from 'lucide-react';
 
-const targetOptions = [15, 20, 50];
-
 export default function CompressionControls({ settings, setSettings, disabled }) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
@@ -34,24 +32,6 @@ export default function CompressionControls({ settings, setSettings, disabled })
           </span>
         </div>
       </label>
-
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        {targetOptions.map((target) => (
-          <button
-            key={target}
-            type="button"
-            disabled={disabled}
-            onClick={() => setSettings((current) => ({ ...current, targetKb: target }))}
-            className={`h-10 rounded-md border text-sm font-semibold transition ${
-              Number(settings.targetKb) === target
-                ? 'border-ink bg-ink text-white'
-                : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            {target} KB
-          </button>
-        ))}
-      </div>
 
       <label className="mt-5 block">
         <span className="text-sm font-semibold text-slate-700">Output format</span>
