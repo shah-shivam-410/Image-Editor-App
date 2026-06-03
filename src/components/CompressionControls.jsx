@@ -1,6 +1,9 @@
 import { Gauge } from 'lucide-react';
 
 export default function CompressionControls({ settings, setSettings, disabled }) {
+  const targetKb = Number(settings.targetKb);
+  const hasValidTargetKb = Number.isFinite(targetKb) && targetKb > 0;
+
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -22,7 +25,7 @@ export default function CompressionControls({ settings, setSettings, disabled })
             onChange={(event) =>
               setSettings((current) => ({
                 ...current,
-                targetKb: Math.max(1, Number(event.target.value) || 1),
+                targetKb: event.target.value,
               }))
             }
             className="h-11 w-full rounded-l-md border border-slate-300 bg-white px-3 text-ink outline-none focus:border-ink focus:ring-4 focus:ring-slate-200"
@@ -31,6 +34,11 @@ export default function CompressionControls({ settings, setSettings, disabled })
             KB
           </span>
         </div>
+        {!hasValidTargetKb ? (
+          <p className="mt-2 text-xs font-semibold text-red-600">
+            Enter a target file size before processing.
+          </p>
+        ) : null}
       </label>
 
       <label className="mt-5 block">

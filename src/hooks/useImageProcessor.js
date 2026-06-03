@@ -35,6 +35,12 @@ export function useImageProcessor() {
         return null;
       }
 
+      const targetKb = Number(options.targetKb);
+      if (!Number.isFinite(targetKb) || targetKb <= 0) {
+        setError('Enter a valid target file size in KB before processing. Try 15 KB.');
+        return null;
+      }
+
       setIsProcessing(true);
       setError('');
       setProgress(0);
