@@ -21,9 +21,6 @@ export default function OutputPanel({ result, sourceFile, onReset }) {
           <p className="text-sm font-bold text-ink">
             {result.reachedTarget ? 'Ready for upload' : 'Best effort optimized'}
           </p>
-          <p className="mt-1 text-sm text-slate-600">
-            Quality {Math.round((result.quality || 1) * 100)}% with browser-only processing.
-          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={onReset}>

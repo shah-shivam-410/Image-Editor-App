@@ -40,13 +40,6 @@ export default function CompressionControls({ settings, setSettings, disabled })
           </p>
         ) : null}
       </label>
-
-      <label className="mt-5 block">
-        <span className="text-sm font-semibold text-slate-700">Output format</span>
-        <div className="mt-2 flex h-11 items-center rounded-md border border-slate-300 bg-field px-3 text-sm font-bold text-ink">
-          JPG / JPEG for photo and signature
-        </div>
-      </label>
     </section>
   );
 }

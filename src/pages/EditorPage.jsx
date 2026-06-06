@@ -1,5 +1,5 @@
 import { Sparkles, ShieldCheck } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../components/Button.jsx';
 import CompressionControls from '../components/CompressionControls.jsx';
 import Dropzone from '../components/Dropzone.jsx';
@@ -38,13 +38,6 @@ export default function EditorPage() {
   const canProcess = Boolean(upload.file) && !processor.isProcessing;
   const sourceSize = upload.file?.size ?? 0;
   const sourceType = upload.file?.type?.replace('image/', '') ?? '';
-
-  const helperText = useMemo(() => {
-    if (!upload.file) return 'Upload one image to begin.';
-    return settings.outputType === 'image/png'
-      ? 'PNG is best for signatures, with JPEG fallback if the target is very strict.'
-      : 'JPEG compression uses binary search to keep the highest quality under the target.';
-  }, [settings.outputType, upload.file]);
 
   return (
     <main className="min-h-screen bg-mist">
@@ -116,8 +109,7 @@ export default function EditorPage() {
           />
 
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-soft">
-            <p className="text-sm text-slate-600">{helperText}</p>
-            <div className="mt-4 flex gap-2">
+            <div className="flex gap-2">
               {upload.file ? (
                 <Button
                   variant="secondary"
