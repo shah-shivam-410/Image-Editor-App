@@ -41,6 +41,13 @@ export function useImageProcessor() {
         return null;
       }
 
+      const width = Number(options.width);
+      const height = Number(options.height);
+      if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) {
+        setError('Enter valid width and height values before processing.');
+        return null;
+      }
+
       setIsProcessing(true);
       setError('');
       setProgress(0);

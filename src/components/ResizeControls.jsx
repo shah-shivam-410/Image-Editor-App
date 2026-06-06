@@ -10,22 +10,53 @@ export default function ResizeControls({
 }) {
   const isCmMode = settings.dimensionMode === 'cm';
   const dpiNumber = Number(settings.dpi);
+  const widthNumber = Number(settings.width);
+  const heightNumber = Number(settings.height);
   const hasValidDpi = Number.isFinite(dpiNumber) && dpiNumber > 0;
+  const hasValidWidth = Number.isFinite(widthNumber) && widthNumber > 0;
+  const hasValidHeight = Number.isFinite(heightNumber) && heightNumber > 0;
   const displayDpi = hasValidDpi ? dpiNumber : DEFAULT_DPI;
-  const widthCmDisplay = formatCm(pixelsToCm(settings.width, displayDpi));
-  const heightCmDisplay = formatCm(pixelsToCm(settings.height, displayDpi));
+  const widthCmDisplay = hasValidWidth ? formatCm(pixelsToCm(widthNumber, displayDpi)) : '--';
+  const heightCmDisplay = hasValidHeight ? formatCm(pixelsToCm(heightNumber, displayDpi)) : '--';
+
+  function isPositiveNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) && number > 0;
+  }
 
   function updateDimensionMode(mode) {
-    setSettings((current) => ({
-      ...current,
-      dimensionMode: mode,
-      widthCm: formatCm(pixelsToCm(current.width, Number(current.dpi) || DEFAULT_DPI)),
-      heightCm: formatCm(pixelsToCm(current.height, Number(current.dpi) || DEFAULT_DPI)),
-    }));
+    setSettings((current) => {
+      const currentDpi = Number(current.dpi) || DEFAULT_DPI;
+      const currentWidth = Number(current.width);
+      const currentHeight = Number(current.height);
+
+      return {
+        ...current,
+        dimensionMode: mode,
+        widthCm:
+          Number.isFinite(currentWidth) && currentWidth > 0
+            ? formatCm(pixelsToCm(currentWidth, currentDpi))
+            : '',
+        heightCm:
+          Number.isFinite(currentHeight) && currentHeight > 0
+            ? formatCm(pixelsToCm(currentHeight, currentDpi))
+            : '',
+      };
+    });
   }
 
   function updateDimension(field, value) {
-    const nextValue = Math.max(1, Number(value) || 1);
+    if (!isPositiveNumber(value)) {
+      setSettings((current) => ({
+        ...current,
+        preset: 'custom',
+        [field]: value,
+        [field === 'width' ? 'widthCm' : 'heightCm']: '',
+      }));
+      return;
+    }
+
+    const nextValue = Number(value);
     setSettings((current) => {
       if (!current.maintainAspectRatio || !originalDimensions) {
         return {
@@ -60,7 +91,17 @@ export default function ResizeControls({
   }
 
   function updateCmDimension(field, value) {
-    const nextCm = Math.max(0.01, Number(value) || 0.01);
+    if (!isPositiveNumber(value)) {
+      setSettings((current) => ({
+        ...current,
+        preset: 'custom',
+        [field]: '',
+        [field === 'width' ? 'widthCm' : 'heightCm']: value,
+      }));
+      return;
+    }
+
+    const nextCm = Number(value);
     setSettings((current) => {
       const nextPixels = cmToPixels(nextCm, Number(current.dpi) || DEFAULT_DPI);
       if (!current.maintainAspectRatio || !originalDimensions) {
@@ -125,8 +166,8 @@ export default function ResizeControls({
       return {
         ...current,
         dpi: nextDpi,
-        width: cmToPixels(current.widthCm, nextDpi),
-        height: cmToPixels(current.heightCm, nextDpi),
+        width: isPositiveNumber(current.widthCm) ? cmToPixels(current.widthCm, nextDpi) : '',
+        height: isPositiveNumber(current.heightCm) ? cmToPixels(current.heightCm, nextDpi) : '',
       };
     });
   }
@@ -253,12 +294,17 @@ export default function ResizeControls({
         <div className="flex items-center justify-between gap-3">
           <span className="font-bold text-ink">Final pixel size</span>
           <span className="font-black text-ink">
-            {settings.width} x {settings.height} px
+            {hasValidWidth ? settings.width : '--'} x {hasValidHeight ? settings.height : '--'} px
           </span>
         </div>
         <p className="mt-2 text-slate-600">
           {widthCmDisplay} cm x {heightCmDisplay} cm at {hasValidDpi ? settings.dpi : '--'} DPI
         </p>
+        {!hasValidWidth || !hasValidHeight ? (
+          <p className="mt-1 text-xs font-semibold text-red-600">
+            Enter width and height before processing.
+          </p>
+        ) : null}
         {!hasValidDpi ? (
           <p className="mt-1 text-xs font-semibold text-red-600">
             Enter a DPI value before processing.
